@@ -4,34 +4,47 @@ import { useState } from "react";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [authState, setAuthState] = useState("");
 
-  const handleSumit = () => {
-    fetch("http://localhost:4000/", {
+  const handleSubmit = () => {
+    "handleSubmit is assigned a value but never used.";
+    fetch("http://localhost:4000/user/sign-in", {
       method: "POST",
       body: JSON.stringify({
-        email,
-        password,
+        email: email,
+        password: password,
       }),
+      headers: {
+        "Content-Type": "application/json",
+      },
     })
-      .then((response) => response.json())
-      .then(console.log)
-      .catch((error) => console.log(error));
+      .then((res) => res.json())
+      .then((data) => {
+        setAuthState(data.isAuthenticated);
+      });
   };
-
   return (
     <>
       <h1>Login</h1>
-
       <div>
-        <input type="text" name="" id="emailInputLogin" placeholder="Email" />
         <input
-          type="password"
-          name=""
-          id="passwordInputLogin"
-          placeholder="Password"
+          value={email}
+          type="text"
+          name="email"
+          id="emailLoginInput"
+          placeholder="Email"
+          onChange={(e) => setEmail(e.target.value)}
         />
-
-        <button>Login</button>
+        <input
+          value={password}
+          type="password"
+          name="password"
+          id="passwordLoginInput"
+          placeholder="Password"
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <button onClick={(e) => handleSubmit()}>Login</button>
+        <div>Authenticated: {String(authState)}</div>
       </div>
     </>
   );
